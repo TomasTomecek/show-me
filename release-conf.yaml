@@ -1,0 +1,7 @@
+# https://github.com/user-cont/release-bot config
+
+trigger_on_issue: true
+
+labels:
+  - bot
+  - release-bot

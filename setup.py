@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # MIT License
 #
 # Copyright (c) 2019 Tomas Tomecek
@@ -20,5 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-URL = "https://api.github.com/graphql"
-DEFAULT_START_YEAR = 2019
+from setuptools import setup
+
+setup(use_scm_version=True)
