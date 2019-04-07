@@ -65,7 +65,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
 
     headers = ("Repo", "Total", "Pulls", "Issues", "Commits", "Reviews")
 
-    click.echo(tabulate.tabulate(data, headers=headers))
+    click.echo(tabulate.tabulate(data, headers=headers, tablefmt="presto"))
 
 
 if __name__ == '__main__':
