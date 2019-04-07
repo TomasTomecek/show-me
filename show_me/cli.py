@@ -31,7 +31,7 @@ class PathlibPath(click.Path):
 
 
 @click.command()
-@click.option('--cache-file-path', type=PathlibPath(dir_okay=False),
+@click.option('--cache-file-path', type=PathlibPath(dir_okay=False), show_default=True,
               default=get_cache_file_path(), help="Path to the cache file.")
 @click.option('--load-from-cache', is_flag=True, help="Don't query Github and load from cache.")
 @click.option('--save-to-cache', is_flag=True,
