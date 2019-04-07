@@ -36,7 +36,9 @@ class RepositoryStat:
         self.stars: int = 0
 
     def contrib_sum(self):
-        return self.pull_count + self.issue_count + self.commit_count + self.review_count
+        return (
+            self.pull_count + self.issue_count + self.commit_count + self.review_count
+        )
 
     def __repr__(self):
         return (
@@ -55,6 +57,7 @@ class RepositoryStat:
 
 class StatProcessor:
     """ compute statistics for a specific data set """
+
     def __init__(self, contributions):
         self.c = contributions
         self.m: Dict[str, RepositoryStat] = {}
@@ -68,7 +71,9 @@ class StatProcessor:
 
     def process_issues(self):
         for c in self.c:
-            issues = c["data"]["viewer"]["contributionsCollection"]["issueContributions"]["edges"]
+            issues = c["data"]["viewer"]["contributionsCollection"][
+                "issueContributions"
+            ]["edges"]
             for i in issues:
                 n = i["node"]["issue"]
                 # n["title"]
@@ -79,7 +84,9 @@ class StatProcessor:
 
     def process_pulls(self):
         for c in self.c:
-            prs = c["data"]["viewer"]["contributionsCollection"]["pullRequestContributions"]["edges"]
+            prs = c["data"]["viewer"]["contributionsCollection"][
+                "pullRequestContributions"
+            ]["edges"]
             for p in prs:
                 n = p["node"]["pullRequest"]
                 # n["title"]
@@ -90,7 +97,9 @@ class StatProcessor:
 
     def process_commits(self):
         for c in self.c:
-            commit_contrib = c["data"]["viewer"]["contributionsCollection"]["commitContributionsByRepository"]
+            commit_contrib = c["data"]["viewer"]["contributionsCollection"][
+                "commitContributionsByRepository"
+            ]
             for repo_contrib in commit_contrib:
                 contributions = repo_contrib["contributions"]["edges"]
                 for c in contributions:
@@ -103,7 +112,9 @@ class StatProcessor:
 
     def process_reviews(self):
         for c in self.c:
-            reviews = c["data"]["viewer"]["contributionsCollection"]["pullRequestReviewContributions"]["edges"]
+            reviews = c["data"]["viewer"]["contributionsCollection"][
+                "pullRequestReviewContributions"
+            ]["edges"]
             for r in reviews:
                 n = r["node"]
                 nwo = n["repository"]["nameWithOwner"]

@@ -56,7 +56,7 @@ INSANITY_QUERY = """
             }}
           }}
         }}
-      }}    
+      }}
       pullRequestReviewContributions(first: 100{review_cursor}) {{
         edges {{
           cursor
@@ -111,28 +111,31 @@ INSANITY_QUERY = """
 """
 
 
-def render_template_query(year, issue_cursor="", pr_cursor="", review_cursor="", commit_cursor=""):
+def render_template_query(
+    year, issue_cursor="", pr_cursor="", review_cursor="", commit_cursor=""
+):
     if issue_cursor:
-        issue_cursor = f", after: \"{issue_cursor}\""
+        issue_cursor = f', after: "{issue_cursor}"'
     if pr_cursor:
-        pr_cursor = f", after: \"{pr_cursor}\""
+        pr_cursor = f', after: "{pr_cursor}"'
     if review_cursor:
-        review_cursor = f", after: \"{review_cursor}\""
+        review_cursor = f', after: "{review_cursor}"'
     if commit_cursor:
-        commit_cursor = f", after: \"{commit_cursor}\""
+        commit_cursor = f', after: "{commit_cursor}"'
     q = INSANITY_QUERY.format(
         start_date=START_DATE.format(year=year),
         end_date=END_DATE.format(year=year),
         issue_cursor=issue_cursor,
         pr_cursor=pr_cursor,
         review_cursor=review_cursor,
-        commit_cursor=commit_cursor
+        commit_cursor=commit_cursor,
     )
     return q
 
 
 class G:
     """ GraphQL client """
+
     issue_cursor: str
     pr_cursor: str
     review_cursor: str
@@ -141,7 +144,7 @@ class G:
     def __init__(self, token):
         self.session = requests.Session()
         self.token = token
-        self.session.headers.update({'Authorization': f'token {token}'})
+        self.session.headers.update({"Authorization": f"token {token}"})
         self.reset_cursors()
 
     def reset_cursors(self):
@@ -157,11 +160,11 @@ class G:
         if not self.token:
             raise RuntimeError(
                 "Please set an environment variable GITHUB_TOKEN with your Github API token.\n"
-                "You can obtain it at \"https://github.com/settings/tokens\"."
+                'You can obtain it at "https://github.com/settings/tokens".'
             )
         assert self.token, "Please set a github token."
-        logger.debug(f'query = {query}')
-        response = self.session.post(url=URL, json={'query': query})
+        logger.debug(f"query = {query}")
+        response = self.session.post(url=URL, json={"query": query})
         return response
 
     def _get_i_cursor(self, contrib_collection):
@@ -202,12 +205,14 @@ class G:
     def _get_template_query(self, year, last_response=None):
         if last_response:
             cc = last_response["data"]["viewer"]["contributionsCollection"]
-            if not any((
-                self._get_i_cursor(cc),
-                self._get_pr_cursor(cc),
-                self._get_r_cursor(cc),
-                self._get_c_cursor(cc),
-            )):
+            if not any(
+                (
+                    self._get_i_cursor(cc),
+                    self._get_pr_cursor(cc),
+                    self._get_r_cursor(cc),
+                    self._get_c_cursor(cc),
+                )
+            ):
                 logger.debug("we know everything now")
                 # everything is processed
                 return
@@ -216,7 +221,7 @@ class G:
             issue_cursor=self.issue_cursor,
             pr_cursor=self.pr_cursor,
             review_cursor=self.review_cursor,
-            commit_cursor=self.commit_cursor
+            commit_cursor=self.commit_cursor,
         )
 
     def get_contributions(self, start_year: int) -> List[Dict]:

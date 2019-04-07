@@ -26,12 +26,13 @@ from pathlib import Path
 
 
 def set_logging(
-        logger_name="show_me",
-        level=logging.DEBUG,
-        handler_class=logging.StreamHandler,
-        handler_kwargs=None,
-        format='%(asctime)s.%(msecs).03d %(filename)-17s %(levelname)-6s %(message)s',
-        date_format='%H:%M:%S'):
+    logger_name="show_me",
+    level=logging.DEBUG,
+    handler_class=logging.StreamHandler,
+    handler_kwargs=None,
+    format="%(asctime)s.%(msecs).03d %(filename)-17s %(levelname)-6s %(message)s",
+    date_format="%H:%M:%S",
+):
     """
     Set personal logger for this library.
 
