@@ -55,6 +55,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines, start_ye
     if load_from_cache:
         c = a.load_from_file()
     else:
+        click.echo("Querying Github and preparing results just for you.")
         try:
             c = a.get_contributions(start_year)
         except RuntimeError as ex:
