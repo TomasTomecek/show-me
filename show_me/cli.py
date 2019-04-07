@@ -19,6 +19,8 @@ logger = set_logging()
 
 def main():
     a = API()
+    # c = a.get_contributions()
+    # a.cache_to_file(c)
     c = a.load_from_file()
     repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
 

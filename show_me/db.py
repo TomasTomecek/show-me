@@ -38,6 +38,7 @@ class StatProcessor:
     def get_stats(self) -> Iterable[RepositoryStat]:
         self.process_issues()
         self.process_pulls()
+        self.process_reviews()
         return sorted(self.m.values(), key=lambda x: x.contrib_sum())
 
     def process_issues(self):
@@ -64,5 +65,9 @@ class StatProcessor:
         pass
 
     def process_reviews(self):
-        pass
-
+        reviews = self.c["data"]["viewer"]["contributionsCollection"]["pullRequestReviewContributions"]["edges"]
+        for r in reviews:
+            n = r["node"]
+            nwo = n["repository"]["nameWithOwner"]
+            repo = self.m.setdefault(nwo, RepositoryStat(nwo))
+            repo.review_count += 1
