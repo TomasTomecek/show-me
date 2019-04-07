@@ -63,7 +63,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
         for x in repo_stats[:15]
     ]
 
-    headers = ("Repo", "Total", "P", "I", "C", "R")
+    headers = ("Repo", "Total", "Pulls", "Issues", "Commits", "Reviews")
 
     click.echo(tabulate.tabulate(data, headers=headers))
 
