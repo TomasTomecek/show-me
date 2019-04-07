@@ -12,6 +12,7 @@ TODO: python packaging & upload to pypi
       add releases as contributions
 """
 import logging
+import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -52,7 +53,11 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
     if load_from_cache:
         c = a.load_from_file()
     else:
-        c = a.get_contributions()
+        try:
+            c = a.get_contributions()
+        except RuntimeError as ex:
+            click.echo(f"Something went wrong:\n{ex}")
+            sys.exit(7)
     if save_to_cache:
         a.cache_to_file(c)
     repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
