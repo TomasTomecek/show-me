@@ -43,38 +43,42 @@ class StatProcessor:
         return sorted(self.m.values(), key=lambda x: x.contrib_sum())
 
     def process_issues(self):
-        issues = self.c["data"]["viewer"]["contributionsCollection"]["issueContributions"]["edges"]
-        for i in issues:
-            n = i["node"]["issue"]
-            # n["title"]
-            nwo = n["repository"]["nameWithOwner"]
-            repo = self.m.setdefault(nwo, RepositoryStat(nwo))
-            repo.issue_count += 1
-
-    def process_pulls(self):
-        prs = self.c["data"]["viewer"]["contributionsCollection"]["pullRequestContributions"]["edges"]
-        for p in prs:
-            n = p["node"]["pullRequest"]
-            # n["title"]
-            nwo = n["repository"]["nameWithOwner"]
-            repo = self.m.setdefault(nwo, RepositoryStat(nwo))
-            repo.pull_count += 1
-
-    def process_commits(self):
-        commit_contrib = self.c["data"]["viewer"]["contributionsCollection"]["commitContributionsByRepository"]
-        for repo_contrib in commit_contrib:
-            contributions = repo_contrib["contributions"]["edges"]
-            for c in contributions:
-                n = c["node"]
+        for c in self.c:
+            issues = c["data"]["viewer"]["contributionsCollection"]["issueContributions"]["edges"]
+            for i in issues:
+                n = i["node"]["issue"]
+                # n["title"]
                 nwo = n["repository"]["nameWithOwner"]
                 repo = self.m.setdefault(nwo, RepositoryStat(nwo))
-                total_commits = n["commitCount"]
-                repo.commit_count += total_commits
+                repo.issue_count += 1
+
+    def process_pulls(self):
+        for c in self.c:
+            prs = c["data"]["viewer"]["contributionsCollection"]["pullRequestContributions"]["edges"]
+            for p in prs:
+                n = p["node"]["pullRequest"]
+                # n["title"]
+                nwo = n["repository"]["nameWithOwner"]
+                repo = self.m.setdefault(nwo, RepositoryStat(nwo))
+                repo.pull_count += 1
+
+    def process_commits(self):
+        for c in self.c:
+            commit_contrib = c["data"]["viewer"]["contributionsCollection"]["commitContributionsByRepository"]
+            for repo_contrib in commit_contrib:
+                contributions = repo_contrib["contributions"]["edges"]
+                for c in contributions:
+                    n = c["node"]
+                    nwo = n["repository"]["nameWithOwner"]
+                    repo = self.m.setdefault(nwo, RepositoryStat(nwo))
+                    total_commits = n["commitCount"]
+                    repo.commit_count += total_commits
 
     def process_reviews(self):
-        reviews = self.c["data"]["viewer"]["contributionsCollection"]["pullRequestReviewContributions"]["edges"]
-        for r in reviews:
-            n = r["node"]
-            nwo = n["repository"]["nameWithOwner"]
-            repo = self.m.setdefault(nwo, RepositoryStat(nwo))
-            repo.review_count += 1
+        for c in self.c:
+            reviews = c["data"]["viewer"]["contributionsCollection"]["pullRequestReviewContributions"]["edges"]
+            for r in reviews:
+                n = r["node"]
+                nwo = n["repository"]["nameWithOwner"]
+                repo = self.m.setdefault(nwo, RepositoryStat(nwo))
+                repo.review_count += 1

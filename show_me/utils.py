@@ -2,7 +2,7 @@ import logging
 
 
 def set_logging(
-        logger_name="show-me",
+        logger_name="show_me",
         level=logging.DEBUG,
         handler_class=logging.StreamHandler,
         handler_kwargs=None,

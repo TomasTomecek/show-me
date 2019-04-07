@@ -5,6 +5,7 @@ TODO: print progress
       sort by # of +- code
       sort by last contributed repositories
       filter by date interval
+      add releases as contributions
 """
 from typing import Iterable
 
@@ -19,8 +20,8 @@ logger = set_logging()
 
 def main():
     a = API()
-    # c = a.get_contributions()
-    # a.cache_to_file(c)
+    c = a.get_contributions()
+    a.cache_to_file(c)
     c = a.load_from_file()
     repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
 

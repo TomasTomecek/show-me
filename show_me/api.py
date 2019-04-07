@@ -21,7 +21,7 @@ class API:
         return contributions
 
     def get_contributions(self):
-        return self.g.get_contributaions()
+        return self.g.get_contributions()
 
     def get_stats(self, contributions):
         """
