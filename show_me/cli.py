@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
 """
 TODO: python packaging & upload to pypi
+      enable setting start date
       print progress & add colors & nicer table
-      show last 25 entries
-      add stars
       add diffstats
       sort by stars
       sort by # of commits
       sort by # of +- code
       sort by last contributed repositories
-      enable setting start date
+      enable picking a different user
       add releases as contributions
 """
 import logging
@@ -58,12 +58,12 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
     repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
 
     data = [
-        (x.name_with_owner, x.contrib_sum(), x.pull_count,
+        (x.name_with_owner, x.stars, x.contrib_sum(), x.pull_count,
          x.issue_count, x.commit_count, x.review_count)
         for x in repo_stats[:15]
     ]
 
-    headers = ("Repo", "Total", "Pulls", "Issues", "Commits", "Reviews")
+    headers = ("Repo", "★", "Total", "Pulls", "Issues", "Commits", "Reviews")
 
     click.echo(tabulate.tabulate(data, headers=headers, tablefmt="presto"))
 

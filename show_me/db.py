@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from typing import Iterable, Dict
 
 
@@ -10,20 +11,21 @@ class RepositoryStat:
         self.issue_count: int = 0
         self.commit_count: int = 0
         self.review_count: int = 0
+        self.stars: int = 0
 
     def contrib_sum(self):
         return self.pull_count + self.issue_count + self.commit_count + self.review_count
 
     def __repr__(self):
         return (
-            f"RepoStat({self.name_with_owner}, PRs={self.pull_count}"
+            f"RepoStat({self.name_with_owner}, ★{self.stars}, PRs={self.pull_count}"
             f", issues={self.issue_count}, commits={self.commit_count}"
             f", reviews={self.review_count})"
         )
 
     def __str__(self):
         return (
-            f"{self.name_with_owner}: PRs={self.pull_count}"
+            f"{self.name_with_owner}: ★{self.stars}, PRs={self.pull_count}"
             f", issues={self.issue_count}, commits={self.commit_count}"
             f", reviews={self.review_count}"
         )
@@ -51,6 +53,7 @@ class StatProcessor:
                 nwo = n["repository"]["nameWithOwner"]
                 repo = self.m.setdefault(nwo, RepositoryStat(nwo))
                 repo.issue_count += 1
+                repo.stars = n["repository"]["stargazers"]["totalCount"]
 
     def process_pulls(self):
         for c in self.c:
@@ -61,6 +64,7 @@ class StatProcessor:
                 nwo = n["repository"]["nameWithOwner"]
                 repo = self.m.setdefault(nwo, RepositoryStat(nwo))
                 repo.pull_count += 1
+                repo.stars = n["repository"]["stargazers"]["totalCount"]
 
     def process_commits(self):
         for c in self.c:
@@ -73,6 +77,7 @@ class StatProcessor:
                     repo = self.m.setdefault(nwo, RepositoryStat(nwo))
                     total_commits = n["commitCount"]
                     repo.commit_count += total_commits
+                    repo.stars = n["repository"]["stargazers"]["totalCount"]
 
     def process_reviews(self):
         for c in self.c:
@@ -82,3 +87,4 @@ class StatProcessor:
                 nwo = n["repository"]["nameWithOwner"]
                 repo = self.m.setdefault(nwo, RepositoryStat(nwo))
                 repo.review_count += 1
+                repo.stars = n["repository"]["stargazers"]["totalCount"]

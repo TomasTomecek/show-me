@@ -26,6 +26,9 @@ INSANITY_QUERY = """
               commitCount
               repository {{
                 nameWithOwner
+                stargazers {{
+                  totalCount
+                }}
               }}
             }}
           }}
@@ -37,6 +40,9 @@ INSANITY_QUERY = """
           node {{
             repository {{
               nameWithOwner
+              stargazers {{
+                totalCount
+              }}
             }}
           }}
         }}
@@ -52,6 +58,9 @@ INSANITY_QUERY = """
               title
               repository {{
                 nameWithOwner
+                stargazers {{
+                  totalCount
+                }}
               }}
             }}
           }}
@@ -65,6 +74,9 @@ INSANITY_QUERY = """
               title,
               repository {{
                 nameWithOwner
+                stargazers {{
+                  totalCount
+                }}
               }}
             }}
           }}
@@ -185,6 +197,7 @@ class G:
         )
 
     def get_contributions(self):
+        # we could make this function async and display stuff real-time
         json_set = []
         j = None
         years_to_scan = iter(range(2010, 2020))
@@ -202,6 +215,6 @@ class G:
             j = self.request(query).json()
             if "errors" in j:
                 raise RuntimeError(json.dumps(j, indent=2))
-            json_set.append(j)
+            json_set.append(j)  # we would yield here instead
         logger.debug("# of queries = %d", len(json_set))
         return json_set
