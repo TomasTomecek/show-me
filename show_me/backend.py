@@ -5,6 +5,8 @@ import logging
 
 import requests
 
+from show_me.constants import URL
+
 
 logger = logging.getLogger(__name__)
 
@@ -52,12 +54,14 @@ class G:
 
     def __init__(self, token):
         self.session = requests.Session()
+        self.token = token
         self.session.headers.update({'Authorization': f'token {token}'})
 
     def request(self, query):
         """
         do a GraphQL request
         """
+        assert self.token, "Please set a github token."
         logger.debug(f'query = {query}')
         response = self.session.post(url=URL, json={'query': query})
         return response

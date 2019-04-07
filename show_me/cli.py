@@ -6,45 +6,31 @@ TODO: print progress
       sort by last contributed repositories
       filter by date interval
 """
-import json
+from typing import Iterable
 
 import tabulate
 
+from show_me.api import API
+from show_me.db import RepositoryStat
 from show_me.utils import set_logging
 
 logger = set_logging()
 
 
+def main():
+    a = API()
+    c = a.load_from_file()
+    repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
+
+    data = [
+        (x.name_with_owner, x.contrib_sum(), x.pull_count,
+         x.issue_count, x.commit_count, x.review_count)
+        for x in repo_stats
+    ]
+
+    headers = ("Repo", "Total", "P", "I", "C", "R")
+
+    print(tabulate.tabulate(data, headers=headers))
 
 
-
-# g = G(os.environ["GITHUB_TOKEN"])
-# contributions = g.get_contributaions()
-# 
-# print(contributions)
-# 
-# with open("j", "w") as fd:
-#     json.dump(contributions, fd, indent=2)
-
-with open("j", "r") as fd:
-    contributions = json.load(fd)
-
-
-prs = contributions["data"]["viewer"]["contributionsCollection"]["pullRequestContributions"]["edges"]
-issues = contributions["data"]["viewer"]["contributionsCollection"]["issueContributions"]["edges"]
-
-data = []
-
-for p in prs:
-    n = p["node"]["pullRequest"]
-    data.append(
-        (n["title"], n["repository"]["nameWithOwner"], n["commits"]["totalCount"])
-    )
-
-for i in issues:
-    n = i["node"]["issue"]
-    data.append(
-        (n["title"], n["repository"]["nameWithOwner"], "")
-    )
-
-print(tabulate.tabulate(data))
+main()
