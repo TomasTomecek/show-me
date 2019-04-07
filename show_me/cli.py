@@ -32,6 +32,8 @@ class PathlibPath(click.Path):
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
+@click.option('-n', '--lines', default=15, show_default=True,
+              help="Print first N lines.")
 @click.option('--cache-file-path', type=PathlibPath(dir_okay=False), show_default=True,
               default=get_cache_file_path(), help="Path to the cache file.")
 @click.option('--load-from-cache', is_flag=True, help="Don't query Github and load from cache.")
@@ -39,7 +41,7 @@ class PathlibPath(click.Path):
               help="Query Github and save response to a file (to save time and bandwidth).")
 @click.option('--debug', is_flag=True,
               help="Show debug logs.")
-def main(load_from_cache, save_to_cache, cache_file_path, debug):
+def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
     """Show me my Github contributions!"""
     if debug:
         logger = set_logging(level=logging.DEBUG)
@@ -58,7 +60,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug):
     data = [
         (x.name_with_owner, x.contrib_sum(), x.pull_count,
          x.issue_count, x.commit_count, x.review_count)
-        for x in repo_stats
+        for x in repo_stats[:15]
     ]
 
     headers = ("Repo", "Total", "P", "I", "C", "R")

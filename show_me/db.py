@@ -40,7 +40,7 @@ class StatProcessor:
         self.process_pulls()
         self.process_reviews()
         self.process_commits()
-        return sorted(self.m.values(), key=lambda x: x.contrib_sum())
+        return sorted(self.m.values(), key=lambda x: x.contrib_sum(), reverse=True)
 
     def process_issues(self):
         for c in self.c:
