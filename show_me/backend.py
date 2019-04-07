@@ -11,10 +11,13 @@ from show_me.constants import URL
 
 logger = logging.getLogger(__name__)
 
+START_DATE = "{year}-01-01T00:00:00"
+END_DATE = "{year}-12-31T23:59:59"
+
 INSANITY_QUERY = """
 {{
   viewer {{
-    contributionsCollection(from: "2011-01-01T00:00:00", to: "2020-01-01T00:00:00") {{
+    contributionsCollection(from: "{start_date}", to: "{end_date}") {{
       commitContributionsByRepository {{
         contributions(first: 100{commit_cursor}) {{
           edges {{
@@ -73,7 +76,7 @@ INSANITY_QUERY = """
 """
 
 
-def render_template_query(issue_cursor="", pr_cursor="", review_cursor="", commit_cursor=""):
+def render_template_query(year, issue_cursor="", pr_cursor="", review_cursor="", commit_cursor=""):
     if issue_cursor:
         issue_cursor = f", after: \"{issue_cursor}\""
     if pr_cursor:
@@ -83,6 +86,8 @@ def render_template_query(issue_cursor="", pr_cursor="", review_cursor="", commi
     if commit_cursor:
         commit_cursor = f", after: \"{commit_cursor}\""
     q = INSANITY_QUERY.format(
+        start_date=START_DATE.format(year=year),
+        end_date=END_DATE.format(year=year),
         issue_cursor=issue_cursor,
         pr_cursor=pr_cursor,
         review_cursor=review_cursor,
@@ -93,13 +98,18 @@ def render_template_query(issue_cursor="", pr_cursor="", review_cursor="", commi
 
 class G:
     """ GraphQL client """
+    issue_cursor: str
+    pr_cursor: str
+    review_cursor: str
+    commit_cursor: str
 
     def __init__(self, token):
         self.session = requests.Session()
         self.token = token
         self.session.headers.update({'Authorization': f'token {token}'})
+        self.reset_cursors()
 
-        # it's gonna be easier to have cursors set globally
+    def reset_cursors(self):
         self.issue_cursor = ""
         self.pr_cursor = ""
         self.review_cursor = ""
@@ -149,7 +159,7 @@ class G:
             self.commit_cursor = response
         return response
 
-    def _get_template_query(self, last_response=None):
+    def _get_template_query(self, year, last_response=None):
         if last_response:
             cc = last_response["data"]["viewer"]["contributionsCollection"]
             if not any((
@@ -162,6 +172,7 @@ class G:
                 # everything is processed
                 return
         return render_template_query(
+            year,
             issue_cursor=self.issue_cursor,
             pr_cursor=self.pr_cursor,
             review_cursor=self.review_cursor,
@@ -171,10 +182,19 @@ class G:
     def get_contributions(self):
         json_set = []
         j = None
+        years_to_scan = iter(range(2010, 2020))
+        year = next(years_to_scan)
+        import ipdb; ipdb.set_trace()
         while True:
-            query = self._get_template_query(last_response=j)
+            query = self._get_template_query(year, last_response=j)
             if not query:
-                break
+                self.reset_cursors()
+                j = None
+                try:
+                    year = next(years_to_scan)
+                except StopIteration:
+                    break
+                continue
             j = self.request(query).json()
             if "errors" in j:
                 raise RuntimeError(json.dumps(j, indent=2))
