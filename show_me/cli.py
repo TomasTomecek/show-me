@@ -11,6 +11,7 @@ TODO: python packaging & upload to pypi
       enable setting start date
       add releases as contributions
 """
+import logging
 from pathlib import Path
 from typing import Iterable
 
@@ -21,7 +22,6 @@ from show_me.api import API
 from show_me.db import RepositoryStat
 from show_me.utils import set_logging, get_cache_file_path
 
-logger = set_logging()
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
@@ -37,8 +37,15 @@ class PathlibPath(click.Path):
 @click.option('--load-from-cache', is_flag=True, help="Don't query Github and load from cache.")
 @click.option('--save-to-cache', is_flag=True,
               help="Query Github and save response to a file (to save time and bandwidth).")
-def main(load_from_cache, save_to_cache, cache_file_path):
+@click.option('--debug', is_flag=True,
+              help="Show debug logs.")
+def main(load_from_cache, save_to_cache, cache_file_path, debug):
     """Show me my Github contributions!"""
+    if debug:
+        logger = set_logging(level=logging.DEBUG)
+    else:
+        logger = set_logging(level=logging.WARNING)
+    logger.debug("cache file path = %s", cache_file_path)
     a = API(cache_file_path)
     if load_from_cache:
         c = a.load_from_file()
