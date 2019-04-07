@@ -210,6 +210,8 @@ class G:
         # we could make this function async and display stuff real-time
         json_set = []
         j = None
+        if start_year >= 2020:
+            raise RuntimeError("The start year should be smaller than 2020.")
         # FIXME: default to current date+time
         years_to_scan = iter(range(start_year, 2020))
         year = next(years_to_scan)
