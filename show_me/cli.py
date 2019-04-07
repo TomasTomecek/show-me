@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 TODO: python packaging & upload to pypi
-      enable setting start date
       print progress & add colors & nicer table
       add diffstats
       sort by stars
@@ -20,6 +19,7 @@ import click
 import tabulate
 
 from show_me.api import API
+from show_me.constants import DEFAULT_START_YEAR
 from show_me.db import RepositoryStat
 from show_me.utils import set_logging, get_cache_file_path
 
@@ -42,7 +42,9 @@ class PathlibPath(click.Path):
               help="Query Github and save response to a file (to save time and bandwidth).")
 @click.option('--debug', is_flag=True,
               help="Show debug logs.")
-def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
+@click.option('--start-year', default=DEFAULT_START_YEAR, show_default=True, type=click.INT,
+              help="Start counting the contributions in the selected year.")
+def main(load_from_cache, save_to_cache, cache_file_path, debug, lines, start_year):
     """Show me my Github contributions!"""
     if debug:
         logger = set_logging(level=logging.DEBUG)
@@ -54,7 +56,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
         c = a.load_from_file()
     else:
         try:
-            c = a.get_contributions()
+            c = a.get_contributions(start_year)
         except RuntimeError as ex:
             click.echo(f"Something went wrong:\n{ex}")
             sys.exit(7)
@@ -65,7 +67,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines):
     data = [
         (x.name_with_owner, x.stars, x.contrib_sum(), x.pull_count,
          x.issue_count, x.commit_count, x.review_count)
-        for x in repo_stats[:15]
+        for x in repo_stats[:lines]
     ]
 
     headers = ("Repo", "★", "Total", "Pulls", "Issues", "Commits", "Reviews")

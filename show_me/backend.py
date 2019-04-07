@@ -3,6 +3,7 @@ Getting the data from a backend: Github
 """
 import json
 import logging
+from typing import Dict, List
 
 import requests
 
@@ -196,11 +197,21 @@ class G:
             commit_cursor=self.commit_cursor
         )
 
-    def get_contributions(self):
+    def get_contributions(self, start_year: int) -> List[Dict]:
+        """
+        Query Github using GraphQL and return a list of responses
+
+        We need to paginate because Github does not return:
+        * more than 100 entries per collection
+        * for more than one year
+
+        :param start_year: int
+        """
         # we could make this function async and display stuff real-time
         json_set = []
         j = None
-        years_to_scan = iter(range(2010, 2020))
+        # FIXME: default to current date+time
+        years_to_scan = iter(range(start_year, 2020))
         year = next(years_to_scan)
         while True:
             query = self._get_template_query(year, last_response=j)

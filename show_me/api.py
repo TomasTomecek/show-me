@@ -18,8 +18,8 @@ class API:
     def load_from_file(self) -> Dict:
         return json.loads(self.cache_path.read_text())
 
-    def get_contributions(self):
-        return self.g.get_contributions()
+    def get_contributions(self, start_year: int):
+        return self.g.get_contributions(start_year)
 
     def get_stats(self, contributions):
         s = StatProcessor(contributions)
