@@ -1,3 +1,11 @@
+"""
+TODO: print progress
+      sort by stars
+      sort by # of commits
+      sort by # of +- code
+      sort by last contributed repositories
+      filter by date interval
+"""
 import os
 import json
 import logging
