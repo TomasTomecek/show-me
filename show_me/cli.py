@@ -22,6 +22,7 @@ from show_me.db import RepositoryStat
 from show_me.utils import set_logging, get_cache_file_path
 
 logger = set_logging()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
 class PathlibPath(click.Path):
@@ -30,7 +31,7 @@ class PathlibPath(click.Path):
         return Path(super().convert(value, param, ctx))
 
 
-@click.command()
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--cache-file-path', type=PathlibPath(dir_okay=False), show_default=True,
               default=get_cache_file_path(), help="Path to the cache file.")
 @click.option('--load-from-cache', is_flag=True, help="Don't query Github and load from cache.")
