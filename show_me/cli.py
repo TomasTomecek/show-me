@@ -11,22 +11,40 @@ TODO: python packaging & upload to pypi
       enable setting start date
       add releases as contributions
 """
+from pathlib import Path
 from typing import Iterable
 
+import click
 import tabulate
 
 from show_me.api import API
 from show_me.db import RepositoryStat
-from show_me.utils import set_logging
+from show_me.utils import set_logging, get_cache_file_path
 
 logger = set_logging()
 
 
-def main():
-    a = API()
-    c = a.get_contributions()
-    a.cache_to_file(c)
-    c = a.load_from_file()
+class PathlibPath(click.Path):
+    """Path argument which returns pathlib.Path"""
+    def convert(self, value, param, ctx):
+        return Path(super().convert(value, param, ctx))
+
+
+@click.command()
+@click.option('--cache-file-path', type=PathlibPath(dir_okay=False),
+              default=get_cache_file_path(), help="Path to the cache file.")
+@click.option('--load-from-cache', is_flag=True, help="Don't query Github and load from cache.")
+@click.option('--save-to-cache', is_flag=True,
+              help="Query Github and save response to a file (to save time and bandwidth).")
+def main(load_from_cache, save_to_cache, cache_file_path):
+    """Show me my Github contributions!"""
+    a = API(cache_file_path)
+    if load_from_cache:
+        c = a.load_from_file()
+    else:
+        c = a.get_contributions()
+    if save_to_cache:
+        a.cache_to_file(c)
     repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
 
     data = [
@@ -37,7 +55,8 @@ def main():
 
     headers = ("Repo", "Total", "P", "I", "C", "R")
 
-    print(tabulate.tabulate(data, headers=headers))
+    click.echo(tabulate.tabulate(data, headers=headers))
 
 
-main()
+if __name__ == '__main__':
+    main()

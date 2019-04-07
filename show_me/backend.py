@@ -119,6 +119,11 @@ class G:
         """
         do a GraphQL request
         """
+        if not self.token:
+            raise RuntimeError(
+                "Please set an environment variable GITHUB_TOKEN with your Github API token.\n"
+                "You can obtain it at \"https://github.com/settings/tokens\"."
+            )
         assert self.token, "Please set a github token."
         logger.debug(f'query = {query}')
         response = self.session.post(url=URL, json={'query': query})
@@ -184,7 +189,6 @@ class G:
         j = None
         years_to_scan = iter(range(2010, 2020))
         year = next(years_to_scan)
-        import ipdb; ipdb.set_trace()
         while True:
             query = self._get_template_query(year, last_response=j)
             if not query:

@@ -1,4 +1,6 @@
 import logging
+import os
+from pathlib import Path
 
 
 def set_logging(
@@ -34,3 +36,14 @@ def set_logging(
         logger.addHandler(handler)
 
     return logger
+
+
+def get_cache_dir() -> Path:
+    p = os.getenv("XDG_CACHE_HOME", None)
+    if p is None:
+        return Path.home().joinpath(".cache")
+    return Path(p).resolve()
+
+
+def get_cache_file_path() -> Path:
+    return get_cache_dir().joinpath("show-me.json")
