@@ -1,10 +1,14 @@
 """
-TODO: print progress
+TODO: python packaging & upload to pypi
+      print progress & add colors & nicer table
+      show last 25 entries
+      add stars
+      add diffstats
       sort by stars
       sort by # of commits
       sort by # of +- code
       sort by last contributed repositories
-      filter by date interval
+      enable setting start date
       add releases as contributions
 """
 from typing import Iterable
