@@ -39,6 +39,7 @@ class StatProcessor:
         self.process_issues()
         self.process_pulls()
         self.process_reviews()
+        self.process_commits()
         return sorted(self.m.values(), key=lambda x: x.contrib_sum())
 
     def process_issues(self):
@@ -58,11 +59,17 @@ class StatProcessor:
             nwo = n["repository"]["nameWithOwner"]
             repo = self.m.setdefault(nwo, RepositoryStat(nwo))
             repo.pull_count += 1
-            total_commits = n["commits"]["totalCount"]
-            repo.commit_count += total_commits
 
     def process_commits(self):
-        pass
+        commit_contrib = self.c["data"]["viewer"]["contributionsCollection"]["commitContributionsByRepository"]
+        for repo_contrib in commit_contrib:
+            contributions = repo_contrib["contributions"]["edges"]
+            for c in contributions:
+                n = c["node"]
+                nwo = n["repository"]["nameWithOwner"]
+                repo = self.m.setdefault(nwo, RepositoryStat(nwo))
+                total_commits = n["commitCount"]
+                repo.commit_count += total_commits
 
     def process_reviews(self):
         reviews = self.c["data"]["viewer"]["contributionsCollection"]["pullRequestReviewContributions"]["edges"]

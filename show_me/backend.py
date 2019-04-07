@@ -14,6 +14,18 @@ INSANITY_QUERY = """
 {
   viewer {
     contributionsCollection(from: "2019-01-01T00:00:00") {
+      commitContributionsByRepository {
+        contributions(last: 100) {
+          edges {
+            node {
+              commitCount
+              repository {
+                nameWithOwner
+              }
+            }
+          }
+        }
+      }    
       pullRequestReviewContributions(first: 100) {
         edges {
           node {
