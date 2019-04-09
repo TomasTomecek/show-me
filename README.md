@@ -1,6 +1,6 @@
 # `show-me`
 
-This is a simple tool to show you history of your Github contributions.
+This is a simple tool to show you history of your GitHub contributions.
 
 ```
 $ show-me
@@ -24,7 +24,7 @@ $ show-me
 ```
 
 Legend (columns in order):
-* Name of the Github repository.
+* Name of the GitHub repository.
 * Current star count.
 * Total number of contributions (sum of pull requests, issues, commits and reviews).
 * A Count of pull requests created by you.
@@ -36,7 +36,7 @@ Legend (columns in order):
 ## Requirements
 
 * Python 3.6+
-* Github API token: you can get it in your [settings
+* GitHub API token: you can get it in your [settings
   page](https://github.com/settings/tokens).
   * Pass it to show-me via environment variable `GITHUB_TOKEN`.
 
@@ -47,7 +47,7 @@ Legend (columns in order):
 $ pip3 install --user show-me
 ```
 
-Feel free to install directly from Github:
+Feel free to install directly from GitHub:
 ```
 $ pip3 install --user git+https://github.com/TomasTomecek/show-me
 ```
@@ -63,14 +63,14 @@ You can configure show-me via CLI options:
 ```
 Usage: show-me [OPTIONS]
 
-  Show me my Github contributions!
+  Show me my GitHub contributions!
 
 Options:
   -n, --lines INTEGER     Print first N lines.  [default: 15]
   --cache-file-path PATH  Path to the cache file.  [default:
                           /home/tt/.cache/show-me.json]
-  --load-from-cache       Don't query Github and load from cache.
-  --save-to-cache         Query Github and save response to a file (to save
+  --load-from-cache       Don't query GitHub and load from cache.
+  --save-to-cache         Query GitHub and save response to a file (to save
                           time and bandwidth).
   --debug                 Show debug logs.
   --start-year INTEGER    Start counting the contributions in the selected
