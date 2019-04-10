@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 """
-Getting the data from a backend: Github
+Getting the data from a backend: GitHub
 """
 import json
 import logging
@@ -159,7 +159,7 @@ class G:
         """
         if not self.token:
             raise RuntimeError(
-                "Please set an environment variable GITHUB_TOKEN with your Github API token.\n"
+                "Please set an environment variable GITHUB_TOKEN with your GitHub API token.\n"
                 'You can obtain it at "https://github.com/settings/tokens".'
             )
         assert self.token, "Please set a github token."
@@ -226,9 +226,9 @@ class G:
 
     def get_contributions(self, start_year: int) -> List[Dict]:
         """
-        Query Github using GraphQL and return a list of responses
+        Query GitHub using GraphQL and return a list of responses
 
-        We need to paginate because Github does not return:
+        We need to paginate because GitHub does not return:
         * more than 100 entries per collection
         * for more than one year
 

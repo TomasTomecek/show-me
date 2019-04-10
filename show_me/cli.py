@@ -66,12 +66,12 @@ class PathlibPath(click.Path):
     help="Path to the cache file.",
 )
 @click.option(
-    "--load-from-cache", is_flag=True, help="Don't query Github and load from cache."
+    "--load-from-cache", is_flag=True, help="Don't query GitHub and load from cache."
 )
 @click.option(
     "--save-to-cache",
     is_flag=True,
-    help="Query Github and save response to a file (to save time and bandwidth).",
+    help="Query GitHub and save response to a file (to save time and bandwidth).",
 )
 @click.option("--debug", is_flag=True, help="Show debug logs.")
 @click.option(
@@ -82,7 +82,7 @@ class PathlibPath(click.Path):
     help="Start counting the contributions in the selected year.",
 )
 def main(load_from_cache, save_to_cache, cache_file_path, debug, lines, start_year):
-    """Show me my Github contributions!"""
+    """Show me my GitHub contributions!"""
     if debug:
         logger = set_logging(level=logging.DEBUG)
     else:
@@ -92,7 +92,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines, start_ye
     if load_from_cache:
         c = a.load_from_file()
     else:
-        click.echo("Querying Github and preparing results just for you.")
+        click.echo("Querying GitHub and preparing results just for you.")
         try:
             c = a.get_contributions(start_year)
         except RuntimeError as ex:
