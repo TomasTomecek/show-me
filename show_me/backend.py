@@ -144,7 +144,7 @@ class G:
     def __init__(self, token):
         self.session = requests.Session()
         self.token = token
-        self.session.headers.update({"Authorization": f"token {token}"})
+        self.session.headers.update({"Authorization": f"bearer {token}"})
         self.reset_cursors()
 
     def reset_cursors(self):
