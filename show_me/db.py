@@ -88,6 +88,7 @@ class StatProcessor:
                 "pullRequestContributions"
             ]["edges"]
             for p in prs:
+                if not p: continue
                 n = p["node"]["pullRequest"]
                 # n["title"]
                 nwo = n["repository"]["nameWithOwner"]
