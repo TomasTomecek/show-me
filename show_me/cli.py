@@ -56,7 +56,7 @@ class PathlibPath(click.Path):
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option(
-    "-n", "--lines", default=15, show_default=True, help="Print first N lines."
+    "-n", "--lines", default=15, show_default=True, help="Print first N lines (-1 for all)."
 )
 @click.option(
     "--cache-file-path",
@@ -102,6 +102,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines, start_ye
         a.cache_to_file(c)
     repo_stats: Iterable[RepositoryStat] = a.get_stats(c)
 
+    slice = repo_stats if lines == -1 else repo_stats[:lines]
     data = [
         (
             x.name_with_owner,
@@ -112,7 +113,7 @@ def main(load_from_cache, save_to_cache, cache_file_path, debug, lines, start_ye
             x.commit_count,
             x.review_count,
         )
-        for x in repo_stats[:lines]
+        for x in slice
     ]
 
     headers = ("Repo", "★", "Total", "Pulls", "Issues", "Commits", "Reviews")
